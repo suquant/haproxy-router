@@ -1,5 +1,5 @@
 [template]
-src = "/var/lib/haproxy/haproxy.cfg"
+src = "haproxy.cfg"
 dest = "/etc/haproxy/haproxy.cfg"
 mode = "0644"
 owner = "haproxy"
