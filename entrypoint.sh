@@ -10,8 +10,15 @@ set -eo pipefail
 [[ $DEBUG ]] && set -x
 
 ETCD_NODE=${ETCD_NODE:-127.0.0.1:2379}
-CONFD_LOGLEVEL=${CONFD_LOGLEVEL:-error}
+CONFD_LOGLEVEL=${CONFD_LOGLEVEL:-info}
 CONFD_INTERVAL=${CONFD_INTERVAL:-2}
+CONFIG_FILE=/etc/haproxy/haproxy.cfg
+
+reload() {
+    /usr/sbin/haproxy -f ${CONFIG_FILE} -db -sf $(pgrep haproxy) &
+    wait
+}
+trap reload SIGHUP
 
 chown -R haproxy /var/lib/haproxy
 
@@ -19,4 +26,5 @@ chown -R haproxy /var/lib/haproxy
 
 sleep 2
 
-exec /usr/sbin/haproxy -db -f /etc/haproxy/haproxy.cfg
+/usr/sbin/haproxy -f ${CONFIG_FILE} -db &
+wait

@@ -7,4 +7,4 @@ keys = [
   "/services/http",
 ]
 check_cmd = "/usr/sbin/haproxy -q -c -f {{.src}}"
-reload_cmd = "kill -s HUP `pgrep haproxy`"
+reload_cmd = "kill -s HUP 1"
