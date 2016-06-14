@@ -19,7 +19,8 @@ CONFIG_FILE=/etc/haproxy/haproxy.cfg
 
 reload() {
     /sbin/iptables -I INPUT -p tcp -m multiport —dports ${DPORTS} —syn -j DROP && sleep ${IPTABLES_SLEEPTIME}
-    /usr/sbin/haproxy -f ${CONFIG_FILE} -db -sf $(pgrep haproxy) && sleep ${RELOAD_SLEEPTIME} &
+    /usr/sbin/haproxy -f ${CONFIG_FILE} -db -sf $(pgrep haproxy) &
+    sleep ${RELOAD_SLEEPTIME}
     /sbin/iptables -D INPUT -p -tcp -m multiport —dports ${DPORTS} —syn -j DROP
     wait
 }
