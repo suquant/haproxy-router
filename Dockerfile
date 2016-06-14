@@ -1,7 +1,7 @@
 FROM alpine:edge
 
 # install common packages
-RUN apk update && apk upgrade \
+RUN apk update && apk upgrade && \
 	apk add haproxy curl iptables &&\
     curl -o /usr/bin/confd -sSL \
         https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 && \
