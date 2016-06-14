@@ -12,10 +12,15 @@ set -eo pipefail
 ETCD_NODE=${ETCD_NODE:-127.0.0.1:2379}
 CONFD_LOGLEVEL=${CONFD_LOGLEVEL:-info}
 CONFD_INTERVAL=${CONFD_INTERVAL:-2}
+DPORTS=${DPORTS:-80,443}
+IPTABLES_SLEEPTIME=${IPTABLES_SLEEPTIME:-0.5}
+RELOAD_SLEEPTIME=${IPTABLES_SLEEPTIME:-0.5}
 CONFIG_FILE=/etc/haproxy/haproxy.cfg
 
 reload() {
-    /usr/sbin/haproxy -f ${CONFIG_FILE} -db -sf $(pgrep haproxy) &
+    /sbin/iptables -I INPUT -p tcp -m multiport —dports ${DPORTS} —syn -j DROP && sleep ${IPTABLES_SLEEPTIME}
+    /usr/sbin/haproxy -f ${CONFIG_FILE} -db -sf $(pgrep haproxy) && sleep ${RELOAD_SLEEPTIME} &
+    /sbin/iptables -D INPUT -p -tcp -m multiport —dports ${DPORTS} —syn -j DROP
     wait
 }
 trap reload SIGHUP
