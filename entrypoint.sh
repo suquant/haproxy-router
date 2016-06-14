@@ -21,7 +21,7 @@ reload() {
     /sbin/iptables -I INPUT -p tcp -m multiport —dports ${DPORTS} —syn -j DROP && /bin/sleep ${IPTABLES_SLEEPTIME}
     /usr/sbin/haproxy -f ${CONFIG_FILE} -db -sf $(pgrep haproxy) &
     /bin/sleep ${RELOAD_SLEEPTIME}
-    /sbin/iptables -D INPUT -p -tcp -m multiport —dports ${DPORTS} —syn -j DROP
+    /sbin/iptables -D INPUT -p tcp -m multiport —dports ${DPORTS} —syn -j DROP
     wait
 }
 trap reload SIGHUP
